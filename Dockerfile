@@ -12,6 +12,7 @@ RUN git clone https://github.com/ggerganov/whisper.cpp.git whisper.cpp
 RUN cd whisper.cpp 
 RUN make -C ./whisper.cpp
 
+RUN mkdir -p ./tmp
 COPY . .
 
 EXPOSE 8000
