@@ -25,7 +25,7 @@ def start(channel: str):
     timestr = time.strftime("%Y%m%d-%H%M%S")
     global filename
     filename = f'whisper-live{timestr}.wav'
-    app.proc = subprocess.Popen([f'streamlink https://www.twitch.tv/{channel} best --twitch-disable-ads -O 2>/dev/null | ffmpeg -loglevel quiet -i - -y -probesize 32 -y -ar 16000 -ac 1 -acodec pcm_s16le /usr/src/app/tmp/{filename}'], stdout=subprocess.PIPE, shell=False, preexec_fn=os.setsid)
+    app.proc = subprocess.Popen([f'streamlink https://www.twitch.tv/{channel} best --twitch-disable-ads -O 2>/dev/null | ffmpeg -loglevel quiet -i - -y -probesize 32 -y -ar 16000 -ac 1 -acodec pcm_s16le /usr/src/app/tmp/{filename}'], stdout=subprocess.PIPE, shell=True, preexec_fn=os.setsid)
 
 @app.get("/stop")
 def stop():
