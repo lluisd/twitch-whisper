@@ -25,11 +25,11 @@ def start(channel: str):
     timestr = time.strftime("%Y%m%d-%H%M%S")
     global filename
     filename = f'whisper-live{timestr}.wav'
-    app.proc = subprocess.Popen([f'streamlink https://www.twitch.tv/{channel} best --twitch-disable-ads -O 2>/dev/null | ffmpeg -loglevel quiet -i - -y -probesize 32 -y -ar 16000 -ac 1 -acodec pcm_s16le ./tmp/{filename}'], stdout=subprocess.PIPE, shell=False, preexec_fn=os.setsid)
+    app.proc = subprocess.Popen([f'streamlink https://www.twitch.tv/{channel} best --twitch-disable-ads -O 2>/dev/null | ffmpeg -loglevel quiet -i - -y -probesize 32 -y -ar 16000 -ac 1 -acodec pcm_s16le /usr/src/app/tmp/{filename}'], stdout=subprocess.PIPE, shell=False, preexec_fn=os.setsid)
 
 @app.get("/stop")
 def stop():
     print("stop")
     if filename:
         os.killpg(os.getpgid(app.proc.pid), signal.SIGTERM) 
-        os.system(f'./whisper.cpp/main ./tmp/{filename} -t 4 -l es -m ./whisper.cpp/models/ggml-base.bin  --no-timestamps -otxt')
+        os.system(f'/usr/src/app/whisper.cpp/main /usr/src/app/tmp/{filename} -t 4 -l es -m /usr/src/app/whisper.cpp/models/ggml-base.bin  --no-timestamps -otxt')
