@@ -4,6 +4,7 @@ import os
 import subprocess
 import signal
 import time
+from fastapi.middleware.cors import CORSMiddleware
 
 #os.system('git clone https://github.com/ggerganov/whisper.cpp.git')
 #os.system('make -C ./whisper.cpp')
@@ -13,6 +14,20 @@ import time
 #os.system('bash ./whisper.cpp/models/download-ggml-model.sh base')
 
 app = FastAPI()
+origins = [
+    "https://twitch-mz-bot.azurewebsites.net",
+    "https://mz.311312.xyz",
+    "http://localhost",
+    "http://localhost:3800",
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 filename = ""
 p = None
 
