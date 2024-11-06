@@ -35,23 +35,23 @@ p = None
 def read_root():
     return {"Hello": "World"}
 
-@app.get("/start/{channel}")
+@app.post("/start/{channel}")
 def start(channel: str):
     print(f'start recording audio from: {channel}')
     timestr = time.strftime("%Y%m%d-%H%M%S")
     global filename
     global p
     filename = f'whisper-live{timestr}.wav'
-    kill_process(p)
+    if p: 
+        os.killpg(os.getpgid(p.pid), signal.SIGTERM)
+        print(f'process {p.pid} stopped') 
+        p = None 
     p = subprocess.Popen([f'streamlink https://www.twitch.tv/{channel} best --twitch-disable-ads -O 2>/dev/null | ffmpeg -loglevel quiet -i - -y -probesize 32 -y -ar 16000 -ac 1 -acodec pcm_s16le tmp/{filename}'], stdout=subprocess.PIPE, shell=True, preexec_fn=os.setsid)
     return {"filename": filename, "pid": p.pid}
 
-@app.get("/stop")
+@app.post("/stop")
 def stop():
     global p
-    kill_process(p)
-        
-def kill_process(p):
     if p: 
         os.killpg(os.getpgid(p.pid), signal.SIGTERM)
         print(f'process {p.pid} stopped') 
